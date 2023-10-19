@@ -1,0 +1,8 @@
+todos:
+controllers\productController.js\getAllProducts :  make search more efficient
+helpers\Validators : need to updated
+routes\product.js : implement route /products/update
+
+routes\bill.js : implement OAuth method /bill/*
+
+see if you can hash much better in controllers\billController.js

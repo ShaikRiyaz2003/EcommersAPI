@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+</head>
+<body>
+    <h1>Make payment Request</h1>
+    <form action="/api/bill/create-order" method = "POST" class = "form">
+        <input type="hidden" name="amount" value = "100">
+        <input type="hidden" name="currency" value = "INR">
+        <input type="hidden" name="receipt" value = "order_rcptid_11">
+        <button type="button" onclick="createOrder()">createPayment</button>
+    </form>
+</body>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    function createOrder(){
+        const form = document.createElement("form");
+        fetch('/api/bill/create-order',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                amount: 10000,
+                currency: 'INR',
+                receipt: 'order_rcptid_11'
+            })
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            const id = data.id;
+            data = data.data;
+            console.log(data, data.id);
+            var options = {
+                "key": "rzp_test_ldCsMNfV0Ply9r", // Enter the Key ID generated from the Dashboard
+                "amount": data.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                "currency": data.currency,
+                "name": "Acme Corp",
+                "description": "Test Transaction",
+                "image": "https://example.com/your_logo",
+                "order_id": id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                "handler": function (response){
+                    alert(response.razorpay_payment_id);
+                    alert(response.razorpay_order_id);
+                    alert(response.razorpay_signature)
+                },
+                "prefill": {
+                    "name": "Shaik Riyaz",
+                    "email": "shaikriyaz2003@gmail.com",
+                    "contact": "99999999"
+                },
+                "notes": {
+                    "address": "Razorpay Corporate Office"
+                },
+                "theme": {
+                    "color": "#3399cc"
+                }
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+        });
+
+    }
+</script>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Form</title>
+    <style>
+        /* Add your styles here */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        #product-form {
+            margin-top: 20px;
+        }
+
+        #add-product-btn {
+            margin-top: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<script>
+    function removeProductRow(button) {
+        const row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+</script>
+<body>
+
+<h2>Order Form</h2>
+
+<form id="order-form">
+    <table id="product-table">
+        <thead>
+            <tr>
+                <th>Product Image</th>
+                <th>Product Code</th>
+                <th>Quantity</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Product rows will be inserted here -->
+        </tbody>
+    </table>
+
+    <button type="button" id="add-product-btn">Add Product</button>
+
+    <button type="submit">Submit Order</button>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const productTable = document.getElementById('product-table');
+        const addProductBtn = document.getElementById('add-product-btn');
+        const orderForm = document.getElementById('order-form');
+
+        addProductBtn.addEventListener('click', function () {
+            addProductRow();
+        });
+
+        orderForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const orderData = getFormData();
+            // Send the orderData to the server using AJAX or fetch
+        });
+
+        function addProductRow() {
+            const newRow = productTable.insertRow();
+            const cell1 = newRow.insertCell(0);
+            const cell2 = newRow.insertCell(1);
+            const cell3 = newRow.insertCell(2);
+
+            cell1.innerHTML = '<input type="text" name="productCode[]" required>';
+            cell2.innerHTML = '<input type="number" name="quantity[]" required>';
+            cell3.innerHTML = '<button type="button" onclick="removeProductRow(this)">Remove</button>';
+        }
+
+        
+
+        function getFormData() {
+            const formData = [];
+            const rows = productTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+            for (const row of rows) {
+                const cells = row.getElementsByTagName('td');
+                const productCode = cells[0].getElementsByTagName('input')[0].value;
+                const quantity = cells[1].getElementsByTagName('input')[0].value;
+
+                if (productCode && quantity) {
+                    formData.push({
+                        code: productCode,
+                        quantity: parseInt(quantity),
+                    });
+                }
+            }
+
+            return formData;
+        }
+    });
+</script>
+
+</body>
+</html>
